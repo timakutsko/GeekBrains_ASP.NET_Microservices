@@ -4,6 +4,7 @@ using System;
 using MetricsManager.Common;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace MetricsManager.Controllers
 {
@@ -12,9 +13,11 @@ namespace MetricsManager.Controllers
     public class AgentsController : ControllerBase
     {
         private readonly AgentsContainer _agentsContainer;
+        private readonly ILogger<AgentsController> _logger;
 
-        public AgentsController(AgentsContainer agentsContainer)
+        public AgentsController(AgentsContainer agentsContainer, ILogger<AgentsController> logger)
         {
+            _logger = logger;
             _agentsContainer = agentsContainer;
         }
         
@@ -38,8 +41,8 @@ namespace MetricsManager.Controllers
             return Ok();
         }
 
-        [HttpGet("list")]
-        public List<AgentInfo> RegistredAgents()
+        [HttpGet("read")]
+        public List<AgentInfo> ReadAgents()
         {
             return _agentsContainer.Agents;
         }
