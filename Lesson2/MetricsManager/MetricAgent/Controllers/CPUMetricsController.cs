@@ -1,0 +1,47 @@
+﻿using MetricAgent.DAL.Models;
+using MetricAgent.Requests;
+using MetricAgent.Responses;
+using MetricAgent.DAL.Repositories;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Data.SQLite;
+using System.Reflection;
+
+namespace MetricAgent.Controllers
+{
+    /// <summary>
+    /// Контроллер для обработки Cpu метрик
+    /// </summary>
+    [Route("api/metrics/cpu")]
+    [ApiController]
+    public class CPUMetricsController : ControllerBase
+    {
+        private readonly ILogger<CPUMetricsController> _logger;
+        private ICPUMetricsRepository _repository;
+
+        public CPUMetricsController(ILogger<CPUMetricsController> logger, ICPUMetricsRepository repository)
+        {
+            _logger = logger;
+            _repository = repository; 
+        }
+        
+        /// <summary>
+        /// Получение CPU метрик за заданный промежуток времени
+        /// </summary>
+        /// <param name="request">Запрос на выдачу метрик с интервалом времени</param>
+        /// <returns>Список метрик за заданный интервал времени</returns>
+        [HttpGet("from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetrics([FromRoute] MetricCreateRequest request)
+        {
+            _logger.LogInformation($"\nМетод {MethodBase.GetCurrentMethod().Name}. Пользовательский ввод:\n" +
+                $"Время с: {request.FromTime};\n" +
+                $"Время по: {request.ToTime}.");
+            var metrics = _repository.GetByTimePeriod(request.FromTime, request.ToTime);
+            
+            return Ok(metrics);
+        }
+    }
+}
