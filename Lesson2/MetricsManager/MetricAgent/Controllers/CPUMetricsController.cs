@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Reflection;
+using AutoMapper;
 
 namespace MetricAgent.Controllers
 {
@@ -21,6 +22,7 @@ namespace MetricAgent.Controllers
     {
         private readonly ILogger<CPUMetricsController> _logger;
         private ICPUMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
         public CPUMetricsController(ILogger<CPUMetricsController> logger, ICPUMetricsRepository repository)
         {
@@ -34,14 +36,24 @@ namespace MetricAgent.Controllers
         /// <param name="request">Запрос на выдачу метрик с интервалом времени</param>
         /// <returns>Список метрик за заданный интервал времени</returns>
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetrics([FromRoute] MetricCreateRequest request)
+        public IActionResult GetMetrics([FromRoute] CPUMetricCreateRequest request)
         {
+            // Логирование
             _logger.LogInformation($"\nМетод {MethodBase.GetCurrentMethod().Name}. Пользовательский ввод:\n" +
                 $"Время с: {request.FromTime};\n" +
                 $"Время по: {request.ToTime}.");
-            var metrics = _repository.GetByTimePeriod(request.FromTime, request.ToTime);
             
-            return Ok(metrics);
+            // Основной процесс
+            IList<CPUMetric> metrics = _repository.GetByTimePeriod(request.FromTime, request.ToTime);
+            var response = new CPUMetricsResponse() 
+            { 
+                Metrics = new List<CPUMetricDTO>() 
+            }; 
+            foreach (var metric in metrics) 
+            { 
+                response.Metrics.Add(_mapper.Map<CPUMetricDTO>(metric)); 
+            }
+            return Ok(response);
         }
     }
 }

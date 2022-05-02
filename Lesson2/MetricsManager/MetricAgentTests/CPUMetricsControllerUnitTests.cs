@@ -17,7 +17,7 @@ namespace MetricAgentTests
         private CPUMetricsController _controller;
         private Mock<ILogger<CPUMetricsController>> _mockLogger;
         private Mock<ICPUMetricsRepository> _mockRepository;
-        private MetricCreateRequest _request = new MetricCreateRequest()
+        private CPUMetricCreateRequest _request = new CPUMetricCreateRequest()
         {
             FromTime = DateTimeOffset.MinValue,
             ToTime = DateTimeOffset.Now
@@ -40,7 +40,7 @@ namespace MetricAgentTests
             var result = _controller.GetMetrics(_request);
 
             // Assert
-            _mockRepository.Verify(repository => repository.Create(It.IsAny<Metric>()), Times.AtMostOnce());
+            _mockRepository.Verify(repository => repository.Create(It.IsAny<CPUMetric>()), Times.AtMostOnce());
         }
 
         [Fact]

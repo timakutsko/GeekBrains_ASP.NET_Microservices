@@ -17,7 +17,7 @@ namespace MetricAgentTests
         private RAMMetricsController _controller;
         private Mock<ILogger<RAMMetricsController>> _mockLogger;
         private Mock<IRAMMetricsRepository> _mockRepository;
-        private MetricCreateRequest _request = new MetricCreateRequest()
+        private RAMMetricCreateRequest _request = new RAMMetricCreateRequest()
         {
             FromTime = DateTimeOffset.MinValue,
             ToTime = DateTimeOffset.Now
@@ -40,7 +40,7 @@ namespace MetricAgentTests
             var result = _controller.GetMetrics(_request);
 
             // Assert
-            _mockRepository.Verify(repository => repository.Create(It.IsAny<Metric>()), Times.AtMostOnce());
+            _mockRepository.Verify(repository => repository.Create(It.IsAny<RAMMetric>()), Times.AtMostOnce());
         }
 
         [Fact]

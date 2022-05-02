@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MetricAgent.DAL.Interfaces;
+using System;
 
 namespace MetricAgent.DAL.Models
 {
-    public class Metric 
+    public class RAMMetric : IMetricModel
     { 
         public int Id { get; set; } 
         public int Value { get; set; }

@@ -6,7 +6,7 @@ namespace MetricAgent.Requests
 	/// <summary>
 	/// Контейнер для запроса метрик из базы
 	/// </summary>
-	public class MetricCreateRequest 
+	public class NETMetricCreateRequest
 	{
 		[FromRoute]
 		public DateTimeOffset FromTime { get; set; }
