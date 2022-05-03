@@ -3,7 +3,7 @@ using System;
 
 namespace MetricAgent.DAL.Models
 {
-    public class HDDMetric : IMetricModel
+    public class HDDMetric
     { 
         public int Id { get; set; } 
         public int Value { get; set; }

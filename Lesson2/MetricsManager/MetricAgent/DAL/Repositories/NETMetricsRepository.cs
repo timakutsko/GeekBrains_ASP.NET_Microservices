@@ -40,7 +40,7 @@ namespace MetricAgent.DAL.Repositories
 				//  Запрос на вставку данных с плейсхолдерами для параметров
 				connection.ExecuteAsync(
 				$"INSERT INTO {_mySql[Tables.NETMetric]} " +
-				$"({_mySql[Columns.Value]}{_mySql[Columns.Time]})" +
+				$"({_mySql[Columns.Value]}, {_mySql[Columns.Time]})" +
 				"VALUES(@value, @time)",
 				// Анонимный объект с параметрамизапроса
 				new

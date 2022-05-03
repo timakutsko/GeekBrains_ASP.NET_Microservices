@@ -23,10 +23,12 @@ namespace MetricAgent.Controllers
         private INETMetricsRepository _repository;
         private readonly IMapper _mapper;
 
-        public NETMetricsController(ILogger<NETMetricsController> logger, INETMetricsRepository repository)
+        public NETMetricsController(ILogger<NETMetricsController> logger, INETMetricsRepository repository, IMapper mapper)
         {
             _logger = logger;
+            _logger.LogDebug("Вызов конструктора");
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet("errors-count/from/{fromTime}/to/{toTime}")]

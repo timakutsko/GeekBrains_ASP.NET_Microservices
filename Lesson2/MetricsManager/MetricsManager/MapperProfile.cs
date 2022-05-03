@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using MetricsManager.DAL.Models;
 using MetricsManager.Responses;
+using MetricsManager.Responses.FromManager;
 
-namespace MetricAgent
+namespace MetricsManager
 {
 	/// <summary>
 	/// Профайлер для маппинга между моделями и DTO объектами метрик
@@ -11,6 +12,7 @@ namespace MetricAgent
 	{
 		public MapperProfile()
 		{
+			CreateMap<AgentInfo, AgentInfoDTO>();
 			CreateMap<CPUMetric, CPUMetricDTO>();
 			CreateMap<HDDMetric, HDDMetricDTO>();
 			CreateMap<NETMetric, NETMetricDTO>();
