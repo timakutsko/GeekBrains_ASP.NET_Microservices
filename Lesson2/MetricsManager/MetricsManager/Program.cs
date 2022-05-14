@@ -41,8 +41,8 @@ namespace MetricsManager
                 }).ConfigureLogging(logging => 
                 {
                     logging.AddDebug();
-                    logging.ClearProviders(); // Созданиепровайдеров логирования
+                    logging.ClearProviders(); // Создание провайдеров логирования
                     logging.SetMinimumLevel(LogLevel.Trace); //Устанавливаем минимальный уровень логирования
-                    }).UseNLog(); // Добавляем библиотекуnlog
+                    }).UseNLog(); // Добавляем библиотеку nlog
         }
 }

@@ -47,25 +47,25 @@ namespace MetricAgent
 
             // Подключаю контроллеры
             services.AddControllers();
-            
-            // Создание DI-контейнеров для метрик
+
+            // Создание и регистрация DI-контейнеров для метрик
             services.AddSingleton<ICPUMetricsRepository, CPUMetricsRepository>();
             services.AddSingleton<IHDDMetricsRepository, HDDMetricsRepository>();
             services.AddSingleton<INETMetricsRepository, NETMetricsRepository>();
             services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
             services.AddSingleton<IRAMMetricsRepository, RAMMetricsRepository>();
-            
-            // Создание DI-контейнера для SQL
+
+            // Создание и регистрация DI-контейнера для SQL
             services.AddSingleton<IMySqlSettings, MySqlSettings>();
-            
-            // Добаялю планировщик в DI-контейнер
+
+            // Создание и регистрация планировщика в DI-контейнер
             services.AddHostedService<QuartzHostedService>();
 
-            // Создание DI-контейнеров для задач
+            // Создание и регистрация DI-контейнеров для задач
             services.AddSingleton<IJobFactory, SingletonJobFactory>(); 
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            
-            // Добавляю задачи для планировщика в DI-контейнеры
+
+            // Региструю задачи для планировщика
             services.AddSingleton<CPUMetricJob>(); 
             services.AddSingleton<HDDMetricJob>(); 
             services.AddSingleton<NETMetricJob>(); 

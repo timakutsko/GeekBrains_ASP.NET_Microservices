@@ -1,5 +1,9 @@
 using AutoMapper;
+using FluentMigrator;
 using FluentMigrator.Runner;
+using MetricsManager.Client;
+using MetricsManager.DAL.Interfaces;
+using MetricsManager.DAL.Migrations;
 using MetricsManager.DAL.Repositories;
 using MetricsManager.MySQLSettings;
 using MetricsManager.ScheduledWorks.Jobs;
@@ -13,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Polly;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -43,22 +48,25 @@ namespace MetricsManager
             // Подключаю контроллеры
             services.AddControllers();
 
-            // Создание DI-контейнеров для метрик
+            // Создание и регистрация DI-контейнеров для метрик
+            services.AddSingleton<IAgentsRepository, AgentsRepository>();
             services.AddSingleton<ICPUMetricsRepository, CPUMetricsRepository>();
             services.AddSingleton<IHDDMetricsRepository, HDDMetricsRepository>();
             services.AddSingleton<INETMetricsRepository, NETMetricsRepository>();
             services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
             services.AddSingleton<IRAMMetricsRepository, RAMMetricsRepository>();
 
-            // Создание DI-контейнера для SQL
+            // Создание и регистрация DI-контейнера для SQL
             services.AddSingleton<IMySqlSettings, MySqlSettings>();
-            
-            // Создание DI-контейнеров для задач
+
+            // Создание и регистрация планировщика в DI-контейнер
             services.AddHostedService<QuartzHostedService>();
-            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+
+            // Создание и регистрация DI-контейнеров для задач
+            services.AddSingleton<IJobFactory, SingletonJobFactory>(); 
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
-            // Добавляю задачи для планировщика в DI-контейнеры
+            // Региструю задачи для планировщика
             services.AddSingleton<CPUMetricJob>();
             services.AddSingleton<HDDMetricJob>();
             services.AddSingleton<NETMetricJob>();
@@ -85,6 +93,9 @@ namespace MetricsManager
                 WithGlobalConnectionString(new MySqlSettings().ConnectionString).
                 // Подсказываем, где искать классы с миграциями
                 ScanIn(typeof(Startup).Assembly).For.Migrations()).AddLogging(lb => lb.AddFluentMigratorConsole());
+
+            // Подключаю HTTP client, настриваю повторные запросы при ошибках ответа сревера
+            services.AddHttpClient<IMetricsManagerClient, MetricsManagerClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,7 +116,6 @@ namespace MetricsManager
             {
                 endpoints.MapControllers();
             });
-
 
             // Запускаем миграции
             migrationRunner.MigrateUp();

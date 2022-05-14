@@ -42,10 +42,10 @@ namespace MetricAgent.DAL.Repositories
 				$"INSERT INTO {_mySql[Tables.CPUMetric]} " +
 				$"({_mySql[Columns.Value]}, {_mySql[Columns.Time]})" +
 				"VALUES(@value, @time)",
-				// Анонимный объект с параметрамизапроса
+				// Анонимный объект с параметрами запроса
 				new
 				{
-					// Value подставится на место"@value" в строке запроса 
+					// Value подставится на место "@value" в строке запроса 
 					// Значение запишется из поля Value объекта item
 					value = metric.Value,
 					// Записываем в поле timeколичество секунд
