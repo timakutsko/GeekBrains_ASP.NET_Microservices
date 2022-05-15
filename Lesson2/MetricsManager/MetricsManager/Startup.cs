@@ -23,7 +23,9 @@ using Quartz.Impl;
 using Quartz.Spi;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace MetricsManager
@@ -96,6 +98,32 @@ namespace MetricsManager
 
             // Подключаю HTTP client, настриваю повторные запросы при ошибках ответа сревера
             services.AddHttpClient<IMetricsManagerClient, MetricsManagerClient>();
+
+            // Включаю генерацию спецификации
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API сервиса агента сбора метрик",
+                    Description = "Additional information",
+                    TermsOfService = new Uri("https://example.com/"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Tsimafei Kutsko",
+                        Email = string.Empty,
+                        Url = new Uri("https://example.com/contacts"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "License",
+                        Url = new Uri("https://creativecommons.org/choose/zero/"),
+                    }
+                });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,6 +147,17 @@ namespace MetricsManager
 
             // Запускаем миграции
             migrationRunner.MigrateUp();
+
+            // Включение middleware в пайплайн для обработки Swagger-запросов.
+            app.UseSwagger();
+            // включение middleware для генерации swagger-ui 
+            //указываемэндпоинтSwaggerJSON(кудаобращатьсязасгенерированной спецификацией, 
+            // по которой будет построен UI).
+            app.UseSwaggerUI(c =>
+            { 
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API сервиса агента сбора метрик"); 
+                c.RoutePrefix = string.Empty; 
+            });
         }
     }
 }
