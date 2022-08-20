@@ -8,40 +8,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MetricsManager
+namespace MetricAgent
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-            try 
-            { 
-                logger.Debug("Запуск"); 
-                CreateHostBuilder(args).Build().Run(); 
-            } 
+            try
+            {
+                logger.Debug("Запуск");
+                CreateHostBuilder(args).Build().Run();
+            }
             // Отлов всех исключений в рамках работыприложения
-            catch(Exception exception) 
-            { 
+            catch (Exception exception)
+            {
                 //NLog: устанавливаем отлов исключений
-                logger.Error(exception,"Остановлено из-за ошибки"); 
-            } 
+                logger.Error(exception, "Остановлено из-за ошибки");
+            }
             // Остановка логгера
-            finally 
-            { 
-                NLog.LogManager.Shutdown(); 
-            } 
+            finally
+            {
+                NLog.LogManager.Shutdown();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+           Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                }).ConfigureLogging(logging => 
+                }).ConfigureLogging(logging =>
                 {
                     logging.ClearProviders(); // Созданиепровайдеров логирования
                     logging.SetMinimumLevel(LogLevel.Trace); //Устанавливаем минимальный уровень логирования
-                    }).UseNLog(); // Добавляем библиотекуnlog
-        }
+                }).UseNLog(); // Добавляем библиотекуnlog
+    }
 }

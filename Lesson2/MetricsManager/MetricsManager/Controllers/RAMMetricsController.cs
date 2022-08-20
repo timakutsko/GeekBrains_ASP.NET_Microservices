@@ -7,14 +7,14 @@ using System.Reflection;
 
 namespace MetricsManager.Controllers
 {
-    [Route("api/metrics/hdd")]
+    [Route("api/metrics/ram")]
     [ApiController]
-    public class HDDMetricsController : ControllerBase
+    public class RAMMetricsController : ControllerBase
     {
 
-        private readonly ILogger<HDDMetricsController> _logger;
+        private readonly ILogger<RAMMetricsController> _logger;
 
-        public HDDMetricsController(ILogger<HDDMetricsController> logger)
+        public RAMMetricsController(ILogger<RAMMetricsController> logger)
         {
             _logger = logger;
         }
