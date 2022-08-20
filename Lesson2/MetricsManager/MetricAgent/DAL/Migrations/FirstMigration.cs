@@ -15,9 +15,12 @@ namespace MetricsAgent.DAL.Migrations
             _mySql = mySqlSettings;
         }
 
+        /// <summary>
+        /// Подключить таблицы для записи
+        /// </summary>
         public override void Up() 
         {
-            foreach(Tables table in Enum.GetValues(typeof(Tables)))
+            foreach (Tables table in Enum.GetValues(typeof(Tables)))
             {
                 Create.Table($"{_mySql[table]}").
                     WithColumn($"{_mySql[Columns.Id]}").AsInt64().PrimaryKey().Identity().
@@ -25,6 +28,10 @@ namespace MetricsAgent.DAL.Migrations
                     WithColumn($"{_mySql[Columns.Time]}").AsInt64(); 
             }
         } 
+        
+        /// <summary>
+        /// Удалить таблицы с данными
+        /// </summary>
         public override void Down() 
         {
             foreach (Tables table in Enum.GetValues(typeof(Tables)))

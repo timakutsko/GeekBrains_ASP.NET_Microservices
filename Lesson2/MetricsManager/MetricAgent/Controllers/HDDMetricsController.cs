@@ -31,6 +31,11 @@ namespace MetricAgent.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Получение HDD метрик за заданный промежуток времени
+        /// </summary>
+        /// <param name="request">Запрос на выдачу метрик с интервалом времени</param>
+        /// <returns>Список метрик за заданный интервал времени</returns>
         [HttpGet("left/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetrics([FromRoute] HDDMetricCreateRequest request)
         {

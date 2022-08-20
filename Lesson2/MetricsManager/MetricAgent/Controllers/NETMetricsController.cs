@@ -31,6 +31,11 @@ namespace MetricAgent.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Получение NET метрик за заданный промежуток времени
+        /// </summary>
+        /// <param name="request">Запрос на выдачу метрик с интервалом времени</param>
+        /// <returns>Список метрик за заданный интервал времени</returns>
         [HttpGet("errors-count/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetrics([FromRoute] NETMetricCreateRequest request)
         {

@@ -18,7 +18,7 @@ using MetricsManager.DAL.Models;
 namespace MetricsManager.ScheduledWorks.Jobs
 {
 	/// <summary>
-	/// Задача сбора Cpu метрик
+	/// Задача сбора Network метрик
 	/// </summary>
 	[DisallowConcurrentExecution]
 	public class NetworkMetricJob : IJob

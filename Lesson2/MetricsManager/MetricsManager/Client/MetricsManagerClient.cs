@@ -13,11 +13,11 @@ namespace MetricsManager.Client
 {
 	public enum ApiNames
 	{
-		Cpu,
-		DotNet,
-		Hdd,
+		CPU,
+		NET,
+		HDD,
 		Network,
-		Ram,
+		RAM,
 	}
 
 	public class MetricsManagerClient : IMetricsManagerClient
@@ -27,11 +27,11 @@ namespace MetricsManager.Client
 
 		private readonly Dictionary<ApiNames, string> apiNames = new Dictionary<ApiNames, string>()
 		{
-			{ApiNames.Cpu, "cpu" },
-			{ApiNames.DotNet, "dotnet" },
-			{ApiNames.Hdd, "hdd" },
+			{ApiNames.CPU, "cpu" },
+			{ApiNames.NET, "dotnet" },
+			{ApiNames.HDD, "hdd" },
 			{ApiNames.Network, "network" },
-			{ApiNames.Ram, "ram" },
+			{ApiNames.RAM, "ram" },
 		};
 
 

@@ -65,7 +65,7 @@ namespace MetricsManager.ScheduledWorks.Jobs
 				};
 
 				// Делаем запрос к Агенту метрик и получаем список метрик
-				var response = _client.GetMetrics<NETMetricFromAgentDTO>(request, ApiNames.DotNet);
+				var response = _client.GetMetrics<NETMetricFromAgentDTO>(request, ApiNames.NET);
 
 				if (response != null)
 				{
