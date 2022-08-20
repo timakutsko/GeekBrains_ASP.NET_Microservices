@@ -23,10 +23,12 @@ namespace MetricAgent.Controllers
         private IRAMMetricsRepository _repository;
         private readonly IMapper _mapper;
 
-        public RAMMetricsController(ILogger<RAMMetricsController> logger, IRAMMetricsRepository repository)
+        public RAMMetricsController(ILogger<RAMMetricsController> logger, IRAMMetricsRepository repository, IMapper mapper)
         {
             _logger = logger;
+            _logger.LogDebug("Вызов конструктора");
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet("available/from/{fromTime}/to/{toTime}")]

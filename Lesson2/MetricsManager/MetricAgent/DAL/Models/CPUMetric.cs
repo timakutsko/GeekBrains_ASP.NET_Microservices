@@ -3,7 +3,7 @@ using System;
 
 namespace MetricAgent.DAL.Models
 {
-    public class CPUMetric : IMetricModel
+    public class CPUMetric
     { 
         public int Id { get; set; } 
         public int Value { get; set; }

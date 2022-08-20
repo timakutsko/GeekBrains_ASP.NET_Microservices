@@ -24,10 +24,12 @@ namespace MetricAgent.Controllers
         private ICPUMetricsRepository _repository;
         private readonly IMapper _mapper;
 
-        public CPUMetricsController(ILogger<CPUMetricsController> logger, ICPUMetricsRepository repository)
+        public CPUMetricsController(ILogger<CPUMetricsController> logger, ICPUMetricsRepository repository, IMapper mapper)
         {
             _logger = logger;
-            _repository = repository; 
+            _logger.LogDebug("Вызов конструктора");
+            _repository = repository;
+            _mapper = mapper;
         }
         
         /// <summary>

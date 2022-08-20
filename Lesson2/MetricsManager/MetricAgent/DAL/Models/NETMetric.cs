@@ -3,7 +3,7 @@ using System;
 
 namespace MetricAgent.DAL.Models
 {
-    public class NETMetric : IMetricModel
+    public class NETMetric
     { 
         public int Id { get; set; } 
         public int Value { get; set; }

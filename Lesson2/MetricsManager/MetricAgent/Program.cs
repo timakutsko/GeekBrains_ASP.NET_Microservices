@@ -17,7 +17,7 @@ namespace MetricAgent
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("Запуск");
+                logger.Debug("---[Запуск]---");
                 CreateHostBuilder(args).Build().Run();
             }
             // Отлов всех исключений в рамках работыприложения
@@ -40,6 +40,7 @@ namespace MetricAgent
                     webBuilder.UseStartup<Startup>();
                 }).ConfigureLogging(logging =>
                 {
+                    logging.AddDebug();
                     logging.ClearProviders(); // Создание провайдеров логирования
                     logging.SetMinimumLevel(LogLevel.Trace); //Устанавливаем минимальный уровень логирования
                 }).UseNLog(); // Добавляем библиотеку nlog

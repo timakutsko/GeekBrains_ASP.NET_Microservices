@@ -83,7 +83,7 @@ namespace MetricsManager.DAL.Repositories
 		/// <param name="fromTime">Начало временного интервала</param>
 		/// <param name="toTime">Конец временного интервала</param>
 		/// <returns>Список с метриками за заданный интервал времени</returns>
-		public AllMetrics<HDDMetric> GetByTimeInterval(int agentId, DateTimeOffset fromTime, DateTimeOffset toTime)
+		public AllMetrics<HDDMetric> GetByTimePeriod(int agentId, DateTimeOffset fromTime, DateTimeOffset toTime)
 		{
 			var metrics = new AllMetrics<HDDMetric>();
 			using (var connection = new SQLiteConnection(mySql.ConnectionString))
@@ -112,7 +112,7 @@ namespace MetricsManager.DAL.Repositories
 			}
 		}
 
-		public AllMetrics<HDDMetric> GetByTimeIntervalPercentile(
+		public AllMetrics<HDDMetric> GetByTimePeriodPercentile(
 			int agentId,
 			DateTimeOffset fromTime,
 			DateTimeOffset toTime,

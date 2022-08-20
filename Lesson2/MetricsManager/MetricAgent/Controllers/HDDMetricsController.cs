@@ -23,10 +23,12 @@ namespace MetricAgent.Controllers
         private IHDDMetricsRepository _repository;
         private readonly IMapper _mapper;
 
-        public HDDMetricsController(ILogger<HDDMetricsController> logger, IHDDMetricsRepository repository)
+        public HDDMetricsController(ILogger<HDDMetricsController> logger, IHDDMetricsRepository repository, IMapper mapper)
         {
             _logger = logger;
+            _logger.LogDebug("Вызов конструктора");
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet("left/from/{fromTime}/to/{toTime}")]

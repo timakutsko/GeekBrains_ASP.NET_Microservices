@@ -1,62 +1,86 @@
-using MetricsManager.Common;
+using AutoMapper;
+using MetricsManager;
 using MetricsManager.Controllers;
+using MetricsManager.DAL.Interfaces;
+using MetricsManager.DAL.Models;
+using MetricsManager.Requests;
+using MetricsManager.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
+using Moq;
 using Xunit;
 
 namespace MetricsManagerTests
 {
     public class AgentsControllerUnitTests
-    {
-        private AgentsController controller;
-        private readonly ILogger<AgentsController> _logger;
+	{
+		private AgentsController _controller;
+		private Mock<ILogger<AgentsController>> _mockLogger;
+		private Mock<IAgentsRepository> _mockAgentsRepository;
 
-        public AgentsControllerUnitTests() 
-        {
-            controller = new AgentsController(new AgentsContainer(), _logger); 
-        }
-     
-        [Fact]
-        public void RegisterAgent_ReturnsOk()
-        {
+		public AgentsControllerUnitTests()
+		{
+			_mockLogger = new Mock<ILogger<AgentsController>>();
+			_mockAgentsRepository = new Mock<IAgentsRepository>();
+			var myProfile = new MapperProfile();
+			var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+			var mapper = new Mapper(configuration);
 
-            //Arrange
-            AgentInfo agentInfo = new AgentInfo();
-            
-            //Act
-            IActionResult result = controller.RegisterAgent(agentInfo);
-            
-            // Assert
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
-        }
+			_controller = new AgentsController(_mockLogger.Object, _mockAgentsRepository.Object, mapper);
 
-        [Fact]
-        public void EnableAgentById_ReturnsOk()
-        {
+		}
 
-            //Arrange
-            int agentId = 1;
+		[Fact]
+		public void Read_ReturnsCorrectAgentsInfo()
+		{
+			//Arrange
+			//фейковые данные об агентах
+			var mockAgentsInfo = new AllAgentsInfo();
+			mockAgentsInfo.Agents.Add(new AgentInfo() { AgentId = 1, AgentUri = "url1" });
+			mockAgentsInfo.Agents.Add(new AgentInfo() { AgentId = 2, AgentUri = "url2" });
 
-            //Act
-            IActionResult result = controller.EnableAgentById(agentId);
+			_mockAgentsRepository.
+				Setup(repository => repository.GetAllAgentsInfo()).
+				Returns(mockAgentsInfo);
 
-            // Assert
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
-        }
+			//Act
+			var result = _controller.Read();
 
-        [Fact]
-        public void DisableAgentById_ReturnsOk()
-        {
+			var responseMetrics = ((result as OkObjectResult).Value as AllAgentsInfoResponse);
 
-            //Arrange
-            int agentId = 1;
+			bool check = true;
+			if (mockAgentsInfo.Agents.Count == responseMetrics.Agents.Count)
+			{
+				for (int i = 0; i < mockAgentsInfo.Agents.Count; i++)
+				{
+					if ((mockAgentsInfo.Agents[i].AgentId != responseMetrics.Agents[i].AgentId) ||
+						(mockAgentsInfo.Agents[i].AgentUri != responseMetrics.Agents[i].AgentUri))
+					{
+						check = false;//Если хоть одоин элемент в любой паре метрик не совпадает - проверка провалена
+					}
+				}
+			}
+			else//Если длина контейнеров не совпадает - проверка провалена
+			{
+				check = false;
+			}
 
-            //Act
-            IActionResult result = controller.DisableAgentById(agentId);
+			// Assert
+			Assert.True(check);
+		}
 
-            // Assert
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
-        }
-    }
+		[Fact]
+		public void RegistrAgent_ReturnsOk()
+		{
+			//Arrange
+			var request = new AgentInfoRegisterRequest() { AgentId = 101, AgentUri = "http://AgentAdressUri" };
+
+			//Act
+			var result = _controller.RegisterAgent(request);
+
+			// Assert
+			Assert.IsAssignableFrom<IActionResult>(result);
+		}
+
+	}
 }

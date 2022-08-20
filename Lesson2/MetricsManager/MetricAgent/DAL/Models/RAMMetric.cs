@@ -3,7 +3,7 @@ using System;
 
 namespace MetricAgent.DAL.Models
 {
-    public class RAMMetric : IMetricModel
+    public class RAMMetric
     { 
         public int Id { get; set; } 
         public int Value { get; set; }
