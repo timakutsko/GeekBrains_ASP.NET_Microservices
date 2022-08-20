@@ -17,7 +17,7 @@ namespace MetricAgentTests
         private NETMetricsController _controller;
         private Mock<ILogger<NETMetricsController>> _mockLogger;
         private Mock<INETMetricsRepository> _mockRepository;
-        private MetricCreateRequest _request = new MetricCreateRequest()
+        private NETMetricCreateRequest _request = new NETMetricCreateRequest()
         {
             FromTime = DateTimeOffset.MinValue,
             ToTime = DateTimeOffset.Now
@@ -40,7 +40,7 @@ namespace MetricAgentTests
             var result = _controller.GetMetrics(_request);
 
             // Assert
-            _mockRepository.Verify(repository => repository.Create(It.IsAny<Metric>()), Times.AtMostOnce());
+            _mockRepository.Verify(repository => repository.Create(It.IsAny<NETMetric>()), Times.AtMostOnce());
         }
 
         [Fact]

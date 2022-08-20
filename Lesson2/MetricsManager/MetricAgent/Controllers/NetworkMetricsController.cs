@@ -1,4 +1,5 @@
-﻿using MetricAgent.DAL.Models;
+﻿using AutoMapper;
+using MetricAgent.DAL.Models;
 using MetricAgent.DAL.Repositories;
 using MetricAgent.Requests;
 using MetricAgent.Responses;
@@ -20,6 +21,7 @@ namespace MetricAgent.Controllers
     {
         private readonly ILogger<NetworkMetricsController> _logger;
         private INetworkMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
         public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository)
         {
@@ -28,13 +30,24 @@ namespace MetricAgent.Controllers
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetrics([FromRoute] MetricCreateRequest request)
+        public IActionResult GetMetrics([FromRoute] NetworkMetricCreateRequest request)
         {
+            // Логирование
             _logger.LogInformation($"\nМетод {MethodBase.GetCurrentMethod().Name}. Пользовательский ввод:\n" +
                 $"Время с: {request.FromTime};\n" +
                 $"Время по: {request.ToTime}.");
-            var metrics = _repository.GetByTimePeriod(request.FromTime, request.ToTime);
-            return Ok(metrics);
+
+            // Основной процесс
+            IList<NetworkMetric> metrics = _repository.GetByTimePeriod(request.FromTime, request.ToTime);
+            var response = new NetworkMetricsResponse()
+            {
+                Metrics = new List<NetworkMetricDTO>()
+            };
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(_mapper.Map<NetworkMetricDTO>(metric));
+            }
+            return Ok(response);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace MetricAgent
             catch (Exception exception)
             {
                 //NLog: устанавливаем отлов исключений
-                logger.Error(exception, "Остановлено из-за ошибки");
+                logger.Error(exception, "Остановлено из-за ошибки:\n");
             }
             // Остановка логгера
             finally
@@ -40,8 +40,8 @@ namespace MetricAgent
                     webBuilder.UseStartup<Startup>();
                 }).ConfigureLogging(logging =>
                 {
-                    logging.ClearProviders(); // Созданиепровайдеров логирования
+                    logging.ClearProviders(); // Создание провайдеров логирования
                     logging.SetMinimumLevel(LogLevel.Trace); //Устанавливаем минимальный уровень логирования
-                }).UseNLog(); // Добавляем библиотекуnlog
+                }).UseNLog(); // Добавляем библиотеку nlog
     }
 }
